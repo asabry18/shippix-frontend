@@ -1,0 +1,46 @@
+.customer-navbar {
+  background-color: white ;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  border-bottom: 1px solid #e9ecef;
+}
+
+.customer-navbar .brand-text {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #1C7364;
+  text-decoration: none;
+}
+
+.customer-navbar .nav-link-custom {
+  color: #6c757d ;
+  font-weight: 500;
+  transition: color 0.3s ease;
+}
+
+.customer-navbar .nav-link-custom:hover {
+  color: #4A5565 !important;
+}
+
+.customer-navbar .get-started-btn {
+  background-color: #1C7364;
+  border-color: #1C7364;
+  font-weight: 600;
+  padding: 0.5rem 1.5rem;
+  border-radius: 10px;
+  transition: all 0.3s ease;
+}
+
+.customer-navbar .get-started-btn:hover {
+  background-color: #155a4f;
+  border-color: #155a4f;
+  transform: translateY(-1px);
+}
+
+.customer-navbar .navbar-toggler {
+  border: none;
+  padding: 0.25rem 0.5rem;
+}
+
+.customer-navbar .navbar-toggler:focus {
+  box-shadow: none;
+}
