@@ -1,11 +1,19 @@
+import React from 'react'
 import ReactDOM from 'react-dom/client'
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
 import 'bootstrap/dist/css/bootstrap.min.css';
 import CustomerNavbar from './components/Navbar';
 import TrackYourOrder from './pages/trackYourOrder/TrackYourOrder';
+import Help from './pages/help/Help';
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
- <>
-    <CustomerNavbar />
-    <TrackYourOrder />
- </>
+  <React.StrictMode>
+    <Router>
+      <CustomerNavbar />
+      <Routes>
+        <Route path="/" element={<TrackYourOrder />} />
+        <Route path="/help" element={<Help />} />
+      </Routes>
+    </Router>
+  </React.StrictMode>
 )

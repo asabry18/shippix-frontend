@@ -1,0 +1,129 @@
+.help-card {
+  border: 1px solid #EFEFEF;
+  transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+  animation: fadeInUp 0.6s ease-out forwards;
+}
+
+.help-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.1) !important;
+}
+
+.help-card:nth-child(1) {
+  animation-delay: 0.2s;
+}
+.help-card:nth-child(2) {
+  animation-delay: 0.4s;
+}
+.help-card:nth-child(3) {
+  animation-delay: 0.6s;
+}
+
+.icon-placeholder {
+  font-size: 2.5rem;
+  color: #1C7364;
+}
+
+.help-card-icon {
+  width: 60px;
+  height: 60px;
+  transition: transform 0.2s ease-in-out;
+}
+
+.help-card-button {
+  background-color: #1C7364 !important;
+  border-color: #1C7364 !important;
+  font-weight: 600;
+  padding: 0.75rem;
+}
+
+.help-card-button:hover {
+  background-color: #155a4e !important;
+  border-color: #155a4e !important;
+}
+
+.topic-card {
+  background-color: white;
+  transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+  cursor: pointer;
+  min-height: 120px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  border: 1px solid #E9E9E9;
+}
+
+.topic-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
+}
+
+.topic-icon {
+  width: 50px;
+  height: 50px;
+  background-color: #7BD1C7;
+  border-radius: 8px;
+  margin: 0 auto;
+}
+
+.topic-question-mark {
+  font-size: 1.8rem;
+  font-weight: bold;
+  color: #1C7364;
+  line-height: 1;
+}
+
+.faq-view-all {
+  color: #007bff !important;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.faq-view-all:hover {
+  text-decoration: underline;
+}
+
+.faq-accordion .accordion-item {
+  border: 1px solid #e9ecef;
+  border-radius: 10px !important;
+  overflow: hidden;
+}
+
+.faq-accordion .accordion-header {
+  border: none;
+}
+
+.faq-accordion .accordion-button {
+  background-color: #f8f9fa;
+  border: none;
+  font-weight: 600;
+  color: #212529;
+  padding: 1rem 1.25rem;
+}
+
+.faq-accordion .accordion-button:not(.collapsed) {
+  background-color: #1C7364;
+  color: white;
+  box-shadow: none;
+}
+
+.faq-accordion .accordion-button:focus {
+  box-shadow: none;
+  border-color: transparent;
+}
+
+.faq-accordion .accordion-body {
+  padding: 1.25rem;
+  background-color: white;
+  color: #6c757d;
+  line-height: 1.6;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
