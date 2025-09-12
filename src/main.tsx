@@ -6,6 +6,7 @@ import CustomerNavbar from './components/Navbar';
 import TrackYourOrder from './pages/trackYourOrder/TrackYourOrder';
 import Help from './pages/help/Help';
 import ShipmentDetails from './pages/shippmentDetails/ShipmentDetails';
+import RescheduleShipment from './pages/reschedule/RescheduleShipment';
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
@@ -15,6 +16,7 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
         <Route path="/" element={<TrackYourOrder />} />
         <Route path="/help" element={<Help />} />
         <Route path="/shipment/:id" element={<ShipmentDetails />} />
+        <Route path="/shipment/:id/reschedule" element={<RescheduleShipment />} />
       </Routes>
     </Router>
   </React.StrictMode>

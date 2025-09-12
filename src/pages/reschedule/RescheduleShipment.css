@@ -1,0 +1,207 @@
+.reschedule-container {
+  background-color: #F9FAFB;
+  min-height: 100vh;
+}
+
+.reschedule-container h1 {
+  color: #000000;
+}
+.reschedule-note {
+  background-color: #D0FFF7 !important;
+  border: 1px solid #7BD1C7 !important;
+  color: #1C7364 !important;
+  width: 80%;
+}
+
+.current-shipment-card {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  background-color: white;
+}
+.current-shipment-card .card-header {
+  padding: 1.5rem 1.5rem 0;
+}
+.current-shipment-card .card-body {
+  padding: 1rem 1.5rem 1.5rem;
+}
+.info-label {
+  color: #6C7278;
+  font-weight: 500;
+}
+.info-value {
+  font-weight: 600;
+  color: #000000;
+}
+
+.reschedule-box {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  background-color: white;
+}
+
+.form-label {
+  color: #000000;
+  font-size: 0.95rem;
+}
+
+.reason-select,
+.date-input,
+.time-input,
+.new-address-input,
+.special-instructions-input {
+  border: 1px solid #e0e0e0;
+  border-radius: 10px;
+  padding: 0.75rem 1rem;
+  font-size: 0.95rem;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+.reason-select:focus,
+.date-input:focus,
+.time-input:focus,
+.new-address-input:focus,
+.special-instructions-input:focus {
+  border-color: #1C7364;
+  box-shadow: 0 0 0 0.2rem rgba(28, 115, 100, 0.25);
+}
+.reason-select option {
+  padding: 0.5rem;
+}
+
+
+.address-card {
+  background-color: #f8f9fa;
+  border: 1px solid #e9ecef;
+  padding: 1rem 1.25rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+.address-card:hover {
+  border-color: #1C7364;
+  background-color: #f0f9f7;
+}
+.address-card.selected {
+  border-color: #1C7364;
+  background-color: #D0FFF7;
+  box-shadow: 0 2px 8px rgba(28, 115, 100, 0.15);
+}
+.address-title {
+  font-weight: 600;
+  color: #333;
+  font-size: 1rem;
+  margin-bottom: 0.25rem;
+}
+.address-details {
+  color: #6c757d;
+  font-size: 0.9rem;
+}
+
+.special-instructions-input::placeholder {
+  color: #999;
+  font-style: italic;
+}
+
+.date-input::placeholder,
+.time-input::placeholder {
+  color: #999;
+  font-style: italic;
+}
+
+.cancel-btn {
+  border-color: #6c757d !important;
+  color: #6c757d !important;
+  font-weight: 600;
+  padding: 0.75rem 2rem;
+  border-radius: 8px;
+  transition: all 0.2s ease;
+}
+
+.cancel-btn:hover {
+  background-color: #6c757d !important;
+  color: white !important;
+  border-color: #6c757d !important;
+}
+
+.submit-btn {
+  background-color: #1C7364 !important;
+  border-color: #1C7364 !important;
+  font-weight: 600;
+  padding: 0.75rem 2rem;
+  border-radius: 8px;
+  transition: all 0.2s ease;
+}
+
+.submit-btn:hover {
+  background-color: #155a4e !important;
+  border-color: #155a4e !important;
+  transform: translateY(-1px);
+}
+
+/* Responsive Design */
+@media (max-width: 767px) {
+  .reschedule-container {
+    padding: 1rem;
+  }
+  
+  .reschedule-container h1 {
+    font-size: 1.75rem;
+  }
+  
+  .reschedule-box .card-body {
+    padding: 1.5rem;
+  }
+  
+  .cancel-btn,
+  .submit-btn {
+    padding: 0.75rem 1.5rem;
+  }
+}
+
+@media (max-width: 576px) {
+  .d-flex.gap-3 {
+    flex-direction: column;
+  }
+  
+  .cancel-btn,
+  .submit-btn {
+    width: 100%;
+    margin-bottom: 0.5rem;
+  }
+}
+
+
+.modal-content {
+  border: none;
+  border-radius: 20px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+}
+.modal-header {
+  padding: 1.5rem 1.5rem 0.5rem;
+}
+.modal-header .modal-title {
+  color: #333;
+  font-size: 1.25rem;
+}
+.modal-header .btn-close {
+  margin: 0;
+}
+.modal-footer .btn {
+  padding: 0.75rem 1.5rem;
+  border-radius: 10px;
+  font-weight: 600;
+}
+.modal-footer .btn-outline-secondary {
+  border-color: #6c757d;
+  color: #6c757d;
+}
+.modal-footer .btn-outline-secondary:hover {
+  background-color: #6c757d;
+  border-color: #6c757d;
+  color: white;
+}
+.modal-footer .btn-warning {
+  background-color: #1C7364 !important;
+  border-color: #1C7364 !important;
+  color: white;
+}
+.modal-footer .btn-warning:hover {
+  background-color: #155a4e !important;
+  border-color: #155a4e !important;
+}

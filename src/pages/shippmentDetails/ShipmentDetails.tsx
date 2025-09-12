@@ -1,11 +1,11 @@
 import React from 'react';
 import { Container, Row, Col, Card, Button, Badge } from 'react-bootstrap';
-import { useParams } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import './ShipmentDetails.css';
 import loctionIcon from '../../assets/icons/location.svg';
-import clockIcon from '../../assets/clock.svg';
-import driverIcon from '../../assets/driver.svg';
-import callIcon from '../../assets/call.svg';
+import clockIcon from '../../assets/shipmentDetailsIcons/clock.svg';
+import driverIcon from '../../assets/shipmentDetailsIcons/driver.svg';
+import callIcon from '../../assets/shipmentDetailsIcons/call.svg';
 
 interface DeliveryStatus {
   step: string;
@@ -15,6 +15,7 @@ interface DeliveryStatus {
 
 const ShipmentDetails: React.FC = () => {
   const { id } = useParams<{ id: string }>();
+  const navigate = useNavigate();
 
   const deliveryStatuses: DeliveryStatus[] = [
     { step: 'Pending', status: 'complete', label: 'Complete' },
@@ -26,6 +27,10 @@ const ShipmentDetails: React.FC = () => {
 
   const currentStatus = deliveryStatuses.find(status => status.status === 'current')?.step || 'In Transit';
   const isOutForDeliveryOrDelivered = ['Out For Delivery', 'Delivered'].includes(currentStatus);
+
+  const handleReschedule = () => {
+    navigate(`/shipment/${id}/reschedule`);
+  };
 
   return (
     <Container fluid className="shipment-details-container py-4">
@@ -82,7 +87,7 @@ const ShipmentDetails: React.FC = () => {
                   <span className="eta-time">2 Days : 30 hrs : 44 min</span>
                 </div>
                 <div className="d-flex gap-2">
-                  <Button variant="outline-success" className="reschedule-btn flex-fill"  disabled={isOutForDeliveryOrDelivered}>
+                  <Button variant="outline-success" className="reschedule-btn flex-fill" disabled={isOutForDeliveryOrDelivered} onClick={handleReschedule}>
                     Reschedule
                   </Button>
                 </div>
@@ -96,7 +101,7 @@ const ShipmentDetails: React.FC = () => {
                     </div>
                     <span className="fw-bold">Your Driver</span>
                   </div>
-                  <Button variant="outline-dark" size="sm" className="support-btn">
+                  <Button variant="outline-dark" size="sm" className="support-btn" onClick={() => navigate('/help')}>
                     Support
                   </Button>
                 </div>
@@ -104,7 +109,7 @@ const ShipmentDetails: React.FC = () => {
                 <div className="driver-details">
                   <div className="d-flex align-items-center justify-content-between mb-1">
                     <div className="driver-name">Driver's Name</div>
-                    <Button variant="outline-success" size="sm" className="call-btn">
+                    <Button variant="outline-success" size="sm" className="call-btn d-flex align-items-center">
                         <img src={callIcon} alt="Call Icon" className="me-1"/>
                     </Button>
                   </div>
