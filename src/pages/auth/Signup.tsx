@@ -57,54 +57,74 @@ const Signup: React.FC = () => {
 
     if (!formData.ownerName.trim()) {
       newErrors.ownerName = 'Owner name is required';
-    } else if (formData.ownerName.length < 2) {
-      newErrors.ownerName = 'Owner name must be at least 2 characters';
+    } else if (formData.ownerName.charAt(0) === ' ') {
+      newErrors.ownerName = 'First character cannot be a space';
+    } else if (/\d/.test(formData.ownerName)) {
+      newErrors.ownerName = 'Numbers are not allowed in owner name';
+    } else if (!/^[a-zA-Z\s]+$/.test(formData.ownerName)) {
+      newErrors.ownerName = 'Special characters are not allowed in owner name';
     }
 
     if (!formData.email.trim()) {
       newErrors.email = 'Email is required';
-    } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
-      newErrors.email = 'Email format is invalid';
+    } else if (formData.email.charAt(0) === ' ') {
+      newErrors.email = 'First character cannot be a space';
+    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
+      newErrors.email = 'Email must be in valid format (e.g., user@example.com)';
     }
 
     if (!formData.phoneNumber.trim()) {
       newErrors.phoneNumber = 'Phone number is required';
-    } else if (!/^\d{10,13}$/.test(formData.phoneNumber.replace(/\s+/g, ''))) {
-      newErrors.phoneNumber = 'Phone number must be 10-13 digits';
+    } else if (formData.phoneNumber.charAt(0) === ' ') {
+      newErrors.phoneNumber = 'First character cannot be a space';
+    } else if (!/^\d+$/.test(formData.phoneNumber.replace(/\s+/g, ''))) {
+      newErrors.phoneNumber = 'Only numbers are allowed in phone number';
+    } else if (formData.phoneNumber.replace(/\s+/g, '').length < 10 || formData.phoneNumber.replace(/\s+/g, '').length > 15) {
+      newErrors.phoneNumber = 'Phone number must be 10-15 digits';
     }
 
     if (!formData.nationalId.trim()) {
       newErrors.nationalId = 'National ID is required';
-    } else if (formData.nationalId.length < 14) {
-      newErrors.nationalId = 'National ID must be 14 digits';
+    } else if (!/^\d{14}$/.test(formData.nationalId)) {
+      newErrors.nationalId = 'National ID must be exactly 14 digits';
     }
 
     if (!formData.password) {
       newErrors.password = 'Password is required';
     } else if (formData.password.length < 8) {
       newErrors.password = 'Password must be at least 8 characters';
-    } else if (!/(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/.test(formData.password)) {
-      newErrors.password = 'Password must contain uppercase, lowercase, and number';
+    } else if (!/(?=.*\d)/.test(formData.password)) {
+      newErrors.password = 'Password must contain at least one numeric digit';
+    } else if (!/(?=.*[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?])/.test(formData.password)) {
+      newErrors.password = 'Password must contain at least one special character';
     }
 
     if (!formData.confirmPassword) {
-      newErrors.confirmPassword = 'Please confirm your password';
+      newErrors.confirmPassword = 'Confirm password is required';
     } else if (formData.password !== formData.confirmPassword) {
-      newErrors.confirmPassword = 'Passwords do not match';
+      newErrors.confirmPassword = 'Passwords must match';
     }
 
     if (!formData.businessName.trim()) {
       newErrors.businessName = 'Business name is required';
-    } else if (formData.businessName.length < 2) {
-      newErrors.businessName = 'Business name must be at least 2 characters';
+    } else if (formData.businessName.charAt(0) === ' ') {
+      newErrors.businessName = 'First character cannot be a space';
+    } else if (!/^[a-zA-Z0-9\s]+$/.test(formData.businessName)) {
+      newErrors.businessName = 'Special characters are not allowed in business name';
     }
 
     if (!formData.businessType.trim()) {
       newErrors.businessType = 'Business type is required';
+    } else if (formData.businessType.charAt(0) === ' ') {
+      newErrors.businessType = 'First character cannot be a space';
     }
 
     if (!formData.pickupLocation.trim()) {
       newErrors.pickupLocation = 'Pickup location is required';
+    } else if (formData.pickupLocation.charAt(0) === ' ') {
+      newErrors.pickupLocation = 'First character cannot be a space';
+    } else if (!/^[a-zA-Z0-9\s,.]+$/.test(formData.pickupLocation)) {
+      newErrors.pickupLocation = 'Only letters, numbers, spaces, commas, and periods are allowed';
     }
 
     setErrors(newErrors);
