@@ -1,7 +1,7 @@
 import React from 'react';
 import { Navbar, Nav, Button, Container } from 'react-bootstrap';
 import { useNavigate, useLocation } from 'react-router-dom';
-import logo from '../assets/authIcons/logo.svg';
+import logo from '../../assets/authIcons/logo.svg';
 import './Navbar.css';
 
 const MainNavbar: React.FC = () => {

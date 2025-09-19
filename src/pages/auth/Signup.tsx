@@ -79,8 +79,8 @@ const Signup: React.FC = () => {
       newErrors.phoneNumber = 'First character cannot be a space';
     } else if (!/^\d+$/.test(formData.phoneNumber.replace(/\s+/g, ''))) {
       newErrors.phoneNumber = 'Only numbers are allowed in phone number';
-    } else if (formData.phoneNumber.replace(/\s+/g, '').length < 10 || formData.phoneNumber.replace(/\s+/g, '').length > 15) {
-      newErrors.phoneNumber = 'Phone number must be 10-15 digits';
+    } else if (formData.phoneNumber.replace(/\s+/g, '').length < 10 || formData.phoneNumber.replace(/\s+/g, '').length > 13) {
+      newErrors.phoneNumber = 'Phone number must be 10-13 digits';
     }
 
     if (!formData.nationalId.trim()) {

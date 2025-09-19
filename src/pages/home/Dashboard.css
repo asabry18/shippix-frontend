@@ -1,0 +1,115 @@
+.dashboard-container {
+  background-color: #FFFFFF;
+}
+.dashboard-title {
+  color: #2c3e50;
+}
+
+.stats-card {
+  background: white;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  border: 1px solid #23403C;
+}
+.stats-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
+}
+.stats-title {
+  color: #6c757d;
+}
+.stats-value {
+  color: #2c3e50;
+}
+
+.shipments-card {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  background: white;
+  border: 1px solid #23403C;
+}
+.shipments-header {
+  border-bottom: 1px solid #e9ecef;
+}
+.shipments-header h4 {
+  color: #2c3e50;
+}
+
+.view-all-link {
+  color: #1C7364;
+  font-weight: 500;
+}
+.view-all-link:hover {
+  color: #155a4e;
+}
+.shipment-row {
+  border-bottom: 1px solid #f1f3f4;
+}
+.shipment-row:last-child {
+  border-bottom: none;
+}
+.shipment-id {
+  color: #2c3e50;
+  font-weight: 600;
+}
+.shipment-route {
+  color: #6c757d;
+  font-size: 0.875rem;
+}
+.progress-bar-container {
+  width: 200px;
+  height: 6px;
+  background-color: #e9ecef;
+  border-radius: 3px;
+  overflow: hidden;
+}
+.progress-bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #1C7364 0%, #28a745 100%);
+  border-radius: 3px;
+  transition: width 0.3s ease;
+}
+.progress-status-1 {
+  width: 20%;
+}
+.progress-status-2 {
+  width: 40%;
+}
+.progress-status-3 {
+  width: 60%;
+}
+.progress-status-4 {
+  width: 80%;
+}
+.progress-status-5 {
+  width: 100%;
+}
+
+.status-text {
+  color: #2c3e50;
+  font-weight: 500;
+  font-size: 0.875rem;
+}
+.time-remaining {
+  color: #6c757d;
+  font-size: 0.8rem;
+}
+
+.performance-card {
+  background-color: #D5F6F1 !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+.performance-header {
+  background-color: #D5F6F1 !important;
+  border-bottom: 1px solid rgba(28, 115, 100, 0.1);
+}
+.performance-header h4 {
+  color: #253F3C;
+}
+.metric-label {
+  color: #495057;
+  font-weight: 500;
+}
+.metric-value {
+  font-size: 1.125rem;
+  color: #109C03;
+}

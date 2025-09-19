@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Container, Row, Col, Form, Button, /*Alert*/ Spinner } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
-import logo from '../../assets/authicons/logo.svg';
+import logo from '../../assets/authIcons/logo.svg';
 import showPasswordIcon from '../../assets/authIcons/showpassword.svg';
 // import axios from 'axios'; 
 import './Login.css';
