@@ -28,8 +28,18 @@ const CreateOrder: React.FC = () => {
   const [isCalculating, setIsCalculating] = useState(false);
 
   const [validationErrors, setValidationErrors] = useState<{[key: string]: string}>({});
+  
+  const egyptianCities = [
+    'Cairo',
+    'Alexandria',
+    'Giza',
+    'Sharkia',
+    'Dakahlia',
+    'Qalyubia',
+    'Beheira',
+  ];
 
-  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
     setFormData(prev => ({
       ...prev,
@@ -118,6 +128,21 @@ const CreateOrder: React.FC = () => {
     return '';
   };
 
+  const validateEmailAddress = (email: string): string => {
+    if (!email || email.trim() === '') {
+      return 'Email Address must not be blank.';
+    }
+    if (email[0] === ' ') {
+      return 'Email Address first character cannot have space.';
+    }
+    
+    if (! /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim())) {
+      return 'Email Address must be in valid email format (e.g., user@domain.com).';
+    }
+    
+    return '';
+  };
+
   const validateDeliveryAddress = (address: string): string => {
     if (!address || address.trim() === '') {
       return 'Delivery Address must not be blank.';
@@ -156,6 +181,9 @@ const CreateOrder: React.FC = () => {
     
     const customerNameError = validateCustomerName(formData.customerName);
     if (customerNameError) errors.customerName = customerNameError;
+    
+    const emailError = validateEmailAddress(formData.emailAddress);
+    if (emailError) errors.emailAddress = emailError;
     
     const phoneError = validatePhoneNumber(formData.phoneNumber);
     if (phoneError) errors.phoneNumber = phoneError;
@@ -247,9 +275,15 @@ const CreateOrder: React.FC = () => {
                           name="emailAddress"
                           value={formData.emailAddress}
                           onChange={handleInputChange}
+                          onBlur={handleInputBlur}
                           placeholder="Enter email address"
-                          className="form-control-custom rounded-3 py-2"
+                          className={`form-control-custom rounded-3 py-2 ${validationErrors.emailAddress ? 'is-invalid' : ''}`}
                         />
+                        {validationErrors.emailAddress && (
+                          <div className="invalid-feedback d-block">
+                            {validationErrors.emailAddress}
+                          </div>
+                        )}
                       </Form.Group>
                     </Col>
                     <Col md={6}>
@@ -311,14 +345,19 @@ const CreateOrder: React.FC = () => {
                     <Col md={6}>
                       <Form.Group className="mb-2">
                         <Form.Label>City</Form.Label>
-                        <Form.Control
-                          type="text"
+                        <Form.Select
                           name="city"
                           value={formData.city}
                           onChange={handleInputChange}
-                          placeholder="Enter city"
                           className="form-control-custom rounded-3 py-2"
-                        />
+                        >
+                          <option value="">Select a city</option>
+                          {egyptianCities.map((city) => (
+                            <option key={city} value={city}>
+                              {city}
+                            </option>
+                          ))}
+                        </Form.Select>
                       </Form.Group>
                     </Col>
                     <Col md={6}>
