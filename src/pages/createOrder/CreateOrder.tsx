@@ -88,7 +88,12 @@ const CreateOrder: React.FC = () => {
   }; 
 
     const handleNext = () => {
-        console.log(shippingCost);
+        const orderData = {
+            ...formData,
+            shippingCost: shippingCost,
+            totalDistance: 30
+        };
+        navigate('/review-order', { state: { orderData } });
     };
 
   const validateCustomerName = (name: string): string => {

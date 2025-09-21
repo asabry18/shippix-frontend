@@ -1,0 +1,124 @@
+.review-order-no-data button{
+    background-color: #1C7364 !important;
+    border-color: #1C7364 !important;
+    transition: all 0.3s ease;
+}
+.review-order-no-data button:hover {
+  background-color: #1e3d2f !important;
+  border-color: #1e3d2f !important;
+  transform: translateY(-1px);
+}
+.review-order-content .review-title {
+  color: #243F3C !important;
+}
+.review-order-content .back-icon{
+    width: 28px;
+    margin-top: 5px;
+}
+.review-order-content .back-btn:hover .back-icon {
+  transform: translateX(-2px);
+}
+
+.review-order-content .order-id {
+  color: #6c757d !important;
+}
+.review-order-content .info-card {
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    border: 1px solid #23403C;
+}
+.review-order-content .section-title {
+  color: #243F3C !important;
+}
+.review-order-content .info-item {
+  display: flex;
+  flex-direction: column;
+}
+.review-order-content .info-label {
+  color: #6c757d !important;
+}
+.review-order-content .info-value {
+  font-weight: 600;
+}
+.review-order-content .section-icon {
+  width: 24px;
+}
+.review-order-content .cost-title {
+  color: #243F3C !important;
+}
+.review-order-content .cost-icon {
+  width: 24px;
+}
+.review-order-content .cost-amount {
+  color: #212529 !important;
+}
+.review-order-content .status-title {
+  color: #243F3C !important;
+}
+.review-order-content .status-indicator {
+  display: flex;
+  align-items: start;
+}
+.review-order-content .status-icon {
+  margin-right: 12px;
+  margin-top: 5px;
+}
+.review-order-content .spinner {
+  width: 20px;
+  height: 20px;
+  border: 2px solid #e9ecef;
+  border-top: 2px solid #6c757d;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.review-order-content .status-content {
+  display: flex;
+  flex-direction: column;
+}
+.review-order-content .status-label {
+  background-color: #e9ecef;
+  color: #495057;
+  padding: 4px 12px;
+  font-size: 14px;
+  font-weight: 500;
+  width: fit-content;
+}
+.review-order-content .status-description {
+  color: #6c757d !important;
+  font-size: 12px;
+}
+.review-order-content .approve-btn {
+  background-color: #2d5a4a !important;
+  transition: all 0.3s ease;
+}
+
+.review-order-content .approve-btn:hover {
+  background-color: #1e3d2f !important;
+  transform: translateY(-1px);
+}
+
+.review-order-content .edit-btn {
+  transition: all 0.3s ease;
+}
+
+.review-order-content .edit-btn:hover {
+  background-color: #f8f9fa !important;
+  color: #495057 !important;
+}
+.review-order-content .draft-btn {
+  transition: all 0.3s ease;
+}
+.review-order-content .draft-btn:hover {
+  background-color: #f8f9fa !important;
+  color: #495057 !important;
+}
+
+.review-order-content .btn-icon-svg {
+  width: 16px;
+}

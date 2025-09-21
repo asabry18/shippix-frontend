@@ -9,12 +9,16 @@ import CreateOrder from './pages/createOrder/CreateOrder';
 import AuthNavbar from './components/authNavbar/navbar.tsx';
 import HomeNavbar from './components/homeNavbar/navbar.tsx';
 import Footer from './components/Footer/Footer';
+import ReviewOrder from './pages/reviewOrder/reviewOrder.tsx';
+import Payment from './pages/payment/payment.tsx';
 
 const AppContent: React.FC = () => {
   const location = useLocation();
   const isDashboardRoute = location.pathname === '/' || location.pathname === '/dashboard';
   const isCreateOrderRoute = location.pathname === '/create-order';
-  const showNavbar = !isCreateOrderRoute;
+  const isReviewOrderRoute = location.pathname === '/review-order';
+  const isPaymentRoute = location.pathname === '/payment';
+  const showNavbar = !isCreateOrderRoute && !isReviewOrderRoute && !isPaymentRoute;
   const showFooter = isDashboardRoute;
   
   return (
@@ -24,6 +28,8 @@ const AppContent: React.FC = () => {
         <Route path="/" element={<Dashboard />} />
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/create-order" element={<CreateOrder />} />
+        <Route path="/review-order" element={<ReviewOrder />} />
+        <Route path="/payment" element={<Payment />} />
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
       </Routes>
