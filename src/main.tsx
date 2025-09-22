@@ -11,6 +11,7 @@ import HomeNavbar from './components/homeNavbar/navbar.tsx';
 import Footer from './components/Footer/Footer';
 import ReviewOrder from './pages/reviewOrder/reviewOrder.tsx';
 import Payment from './pages/payment/payment.tsx';
+import OrderStatus from './pages/status/orderStatus.tsx';
 
 const AppContent: React.FC = () => {
   const location = useLocation();
@@ -18,7 +19,8 @@ const AppContent: React.FC = () => {
   const isCreateOrderRoute = location.pathname === '/create-order';
   const isReviewOrderRoute = location.pathname === '/review-order';
   const isPaymentRoute = location.pathname === '/payment';
-  const showNavbar = !isCreateOrderRoute && !isReviewOrderRoute && !isPaymentRoute;
+  const isOrderStatusRoute = location.pathname === '/order-status';
+  const showNavbar = !isCreateOrderRoute && !isReviewOrderRoute && !isPaymentRoute && !isOrderStatusRoute;
   const showFooter = isDashboardRoute;
   
   return (
@@ -30,6 +32,7 @@ const AppContent: React.FC = () => {
         <Route path="/create-order" element={<CreateOrder />} />
         <Route path="/review-order" element={<ReviewOrder />} />
         <Route path="/payment" element={<Payment />} />
+        <Route path="/order-status" element={<OrderStatus />} />
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
       </Routes>
@@ -39,9 +42,7 @@ const AppContent: React.FC = () => {
 };
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
-  <React.StrictMode>
-    <Router>
-      <AppContent />
-    </Router>
-  </React.StrictMode>
+  <Router>
+    <AppContent />
+  </Router>
 )

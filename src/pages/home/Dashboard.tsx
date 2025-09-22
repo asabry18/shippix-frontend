@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Container, Row, Col, Card } from 'react-bootstrap';
+import { useLocation, useNavigate } from 'react-router-dom';
 import boxIcon from '../../assets/homeIcons/box.svg';
 import checklistIcon from '../../assets/homeIcons/checklest.svg';
 import locationIcon from '../../assets/homeIcons/location.svg';
@@ -15,6 +16,7 @@ interface StatsCardProps {
 
 interface ShipmentData {
   id: string;
+  customerName: string;
   status: string;
   route: string;
   timeRemaining: string;
@@ -22,18 +24,62 @@ interface ShipmentData {
 }
 
 const Dashboard: React.FC = () => {
-  const statsData = [
+  const location = useLocation();
+  const navigate = useNavigate();
+
+  const newOrder = location.state?.newOrder;
+
+  const [showSuccessMessage, setShowSuccessMessage] = useState(false);
+
+  const [stats, setStats] = useState([
     { title: 'Total Completed Orders', value: 40, icon: boxIcon, iconAlt: 'Box Icon' },
     { title: 'Completed Today', value: 3, icon: checklistIcon, iconAlt: 'Checklist Icon' },
     { title: 'Active', value: 5, icon: locationIcon, iconAlt: 'Location Icon' },
     { title: 'Pending Pickup', value: 0, icon: truckIcon, iconAlt: 'Truck Icon' }
-  ];
+  ]);
+  const [activeShipments, setActiveShipments] = useState<ShipmentData[]>([
+    { id: 'ID1', customerName: "ahmed", status: 'In Transit', route: 'Cairo → Alexandria', timeRemaining: '2 hours', statusLevel: 3 },
+    { id: 'ID2', customerName: "ahmed", status: 'Processing', route: 'Cairo → Giza', timeRemaining: '4 hours', statusLevel: 2 },
+    { id: 'ID3', customerName: "ahmed", status: 'Pickup Pending', route: 'Cairo → Aswan', timeRemaining: '6 hours', statusLevel: 1 }
+  ]);
+  useEffect(() => {
+    if (newOrder) {
+      const newShipment: ShipmentData = {
+        id: newOrder.orderId,
+        status: 'Payment Completed',
+        route: `Cairo → ${newOrder.city}`,
+        timeRemaining: 'Pending Pickup',
+        statusLevel: 1,
+        customerName: newOrder.customerName || 'Ahmed Sabry'
+      };
 
-  const activeShipments: ShipmentData[] = [
-    { id: 'ID1', status: 'Status', route: 'Cairo → Alexandria', timeRemaining: 'Time Remaining', statusLevel: 3 },
-    { id: 'ID2', status: 'Status', route: 'Cairo → Giza', timeRemaining: 'Time Remaining', statusLevel: 2 },
-    { id: 'ID3', status: 'Status', route: 'Cairo → Aswan', timeRemaining: 'Time Remaining', statusLevel: 1 }
-  ];
+      setActiveShipments(prev => [newShipment, ...prev]);
+
+      setStats(prev => prev.map(stat => 
+        stat.title === 'Active' 
+          ? { ...stat, value: (stat.value as number) + 1 }
+          : stat.title === 'Pending Pickup'
+          ? { ...stat, value: (stat.value as number) + 1 }
+          : stat
+      ));
+
+      setShowSuccessMessage(true);
+      setTimeout(() => {
+        setShowSuccessMessage(false);
+      }, 5000);
+    }
+  }, [newOrder]);
+
+  const handleShipmentClick = (shipment: ShipmentData) => {
+    const orderData = {
+      orderId: shipment.id,
+      customerName: shipment.customerName || 'Ahmed Sabry',
+      status: shipment.status,
+      deliveryAddress: shipment.route.split(' → ')[1]
+    };
+
+    navigate('/order-status', { state: { orderData } });
+  };
 
   const performanceData = {
     deliverySuccessRate: '96%',
@@ -60,12 +106,17 @@ const Dashboard: React.FC = () => {
   return (
     <div className="dashboard-container py-5">
       <Container>
+        {showSuccessMessage && (
+          <div className="alert alert-success alert-dismissible fade show mb-4" role="alert">
+            <strong>Payment Successful!</strong> Your order has been added to active shipments.
+          </div>
+        )}
 
         <div className="dashboard-header mb-4">
           <h1 className="dashboard-title">Business Dashboard</h1>
         </div>
         <Row className="mb-5">
-          {statsData.map((stat, index) => (
+          {stats.map((stat, index) => (
             <StatsCard key={index} title={stat.title} value={stat.value} icon={stat.icon} iconAlt={stat.iconAlt} />
           ))}
         </Row>
@@ -82,7 +133,7 @@ const Dashboard: React.FC = () => {
               <Card.Body className="p-0">
                 <div className="shipments-table">
                   {activeShipments.map((shipment, index) => (
-                    <div key={index} className="shipment-row d-flex align-items-center justify-content-between p-4">
+                    <div key={index} className="shipment-row d-flex align-items-center justify-content-between p-4" onClick={() => handleShipmentClick(shipment)}>
                       <div className="shipment-info">
                         <div className="shipment-id">{shipment.id}</div>
                         <div className="shipment-route mb-2">{shipment.route}</div>
@@ -91,7 +142,7 @@ const Dashboard: React.FC = () => {
                           </div>
                         </div>
                       </div>
-                      <div className="shipment-status">
+                      <div className="shipment-status text-end">
                         <div className="status-text">{shipment.status}</div>
                         <div className="time-remaining">{shipment.timeRemaining}</div>
                       </div>

@@ -56,7 +56,9 @@ const ReviewOrder: React.FC = () => {
     const paymentData = {
       customerName: orderData.customerName,
       orderId: orderId,
-      shippingCost: orderData.shippingCost
+      shippingCost: orderData.shippingCost,
+      city: orderData.city,
+      itemsDescription: orderData.itemsDescription
     };
     navigate('/payment', { state: { paymentData } });
   };

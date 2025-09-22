@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Container, Row, Col, Form, Button, Card } from 'react-bootstrap';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import backIcon from '../../assets/createOrderIcon/back.svg';
 import personIcon from '../../assets/createOrderIcon/person.svg';
 import locationIcon from '../../assets/createOrderIcon/location.svg';
@@ -10,22 +10,31 @@ import './CreateOrder.css';
 
 const CreateOrder: React.FC = () => {
   const navigate = useNavigate();
+  const location = useLocation();
+
+  const editData = location.state?.formData;
 
   const [formData, setFormData] = useState({
-    customerName: '',
-    emailAddress: '',
-    phoneNumber: '',
-    streetAddress: '',
-    city: '',
-    notesToDriver: '',
-    itemsDescription: '',
-    packageValue: '',
-    totalWeight: ''
+    customerName: editData?.customerName || '',
+    emailAddress: editData?.emailAddress || '',
+    phoneNumber: editData?.phoneNumber || '',
+    streetAddress: editData?.streetAddress || '',
+    city: editData?.city || '',
+    notesToDriver: editData?.notesToDriver || '',
+    itemsDescription: editData?.itemsDescription || '',
+    packageValue: editData?.packageValue || '',
+    totalWeight: editData?.totalWeight || ''
   });
 
   const [showShippingCost, setShowShippingCost] = useState(false);
-  const [shippingCost, setShippingCost] = useState(0);
+  const [shippingCost, setShippingCost] = useState(editData?.shippingCost || 0);
   const [isCalculating, setIsCalculating] = useState(false);
+
+  useEffect(() => {
+    if (editData?.shippingCost) {
+      setShowShippingCost(true);
+    }
+  }, [editData]);
 
   const [validationErrors, setValidationErrors] = useState<{[key: string]: string}>({});
   

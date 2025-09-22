@@ -10,6 +10,8 @@ interface PaymentData {
   customerName: string;
   orderId: string;
   shippingCost: number;
+  city: string;
+  itemsDescription: string;
 }
 
 type PaymentMethod = 'visa' | 'fawry' | 'vodafone';
@@ -30,14 +32,17 @@ const Payment: React.FC = () => {
   };
 
   const handlePaymentSubmit = () => {
-    console.log('Payment submitted:', {
-      orderId,
+    const newOrder = {
+      orderId: orderId,
+      customerName: customerName,
+      city: paymentData?.city,
+      itemsDescription: paymentData?.itemsDescription,
+      shippingCost: shippingCost,
       paymentMethod: selectedPaymentMethod,
-      amount: shippingCost,
-      customerName
-    });
+      completedAt: new Date().toISOString()
+    };
 
-    navigate('/dashboard');
+    navigate('/dashboard', { state: { newOrder } });
   };
 
   if (!paymentData) {
@@ -160,8 +165,7 @@ const Payment: React.FC = () => {
                   </p>
                 </div>
 
-                <Button 
-                  className="pay-btn w-100 rounded-4 p-3 border-0 d-flex align-items-center justify-content-center" onClick={handlePaymentSubmit}>
+                <Button className="pay-btn w-100 rounded-4 p-3 border-0 d-flex align-items-center justify-content-center" onClick={handlePaymentSubmit}>
                   <img src={checkIcon} alt="Pay" className="pay-icon me-2" />
                   Pay {shippingCost?.toFixed(2)} EGP
                 </Button>

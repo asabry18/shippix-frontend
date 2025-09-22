@@ -19,7 +19,7 @@ const HomeNavbar: React.FC = () => {
   };
 
   const handleSupport = () => {
-    console.log('Support clicked');
+    navigate('/support');
   };
 
   const handleNotifications = () => {
