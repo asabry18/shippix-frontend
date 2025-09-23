@@ -5,8 +5,8 @@ import logo from '../../assets/authIcons/logo.svg';
 import showPasswordIcon from '../../assets/authIcons/showpassword.svg';
 import personIcon from '../../assets/authIcons/person.svg';
 import homeIcon from '../../assets/authIcons/home.svg';
-// import axios from 'axios';
 import './Signup.css';
+import axios from 'axios';
 
 interface SignupFormData {
   ownerName: string;
@@ -166,51 +166,89 @@ const Signup: React.FC = () => {
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  e.preventDefault();
+  setApiError('');
 
-    setApiError('');
+  if (!validateForm()) {
+    return;
+  }
 
-    if (!validateForm()) {
-      return;
-    }
+  setIsLoading(true);
 
-    setIsLoading(true);
+  try {
+    const signupData = {
+      ownerName: formData.ownerName,
+      email: formData.email,
+      phoneNumber: formData.phoneNumber,
+      nationalId: formData.nationalId,
+      password: formData.password,
+      businessName: formData.businessName,
+      businessType: formData.businessType,
+      pickupLocation: formData.pickupLocation,
+    };
 
-    try {
-      /*
-      const signupData = {
-        ownerName: formData.ownerName,
-        email: formData.email,
-        phoneNumber: formData.phoneNumber,
-        nationalId: formData.nationalId,
-        password: formData.password,
-        businessName: formData.businessName,
-        businessType: formData.businessType,
-        pickupLocation: formData.pickupLocation
-      };
+    const response = await axios.post('/api/auth/register', signupData);
 
-      const response = await axios.post('/api/auth/signup', signupData);
-
-      if (response.status === 201 && response.data.success) {
-        console.log('Signup successful!', response.data);
-        navigate('/login');
-      } else {
-        setApiError(response.data.message || 'Signup failed');
-      }
-      */
-
-      // remove when api is connected
-      await new Promise(resolve => setTimeout(resolve, 1500));
-      console.log('Signup successful!', formData);
+    if (response.status === 201 && response.data.success) {
+      console.log('Signup successful!', response.data);
       navigate('/login');
-      
-    } catch (error) {
-      console.error('Signup error:', error);
-      setApiError('An unexpected error occurred');
-    } finally {
-      setIsLoading(false);
+    } else {
+      setApiError(response.data.message || 'Signup failed');
     }
-  };
+  } catch (error: any) {
+    console.error('Signup error:', error);
+    setApiError(error.response?.data?.message || 'An unexpected error occurred');
+  } finally {
+    setIsLoading(false);
+  }
+};
+
+  // const handleSubmit = async (e: React.FormEvent) => {
+  //   e.preventDefault();
+
+  //   setApiError('');
+
+  //   if (!validateForm()) {
+  //     return;
+  //   }
+
+  //   setIsLoading(true);
+
+  //   try {
+  //     /*
+  //     const signupData = {
+  //       ownerName: formData.ownerName,
+  //       email: formData.email,
+  //       phoneNumber: formData.phoneNumber,
+  //       nationalId: formData.nationalId,
+  //       password: formData.password,
+  //       businessName: formData.businessName,
+  //       businessType: formData.businessType,
+  //       pickupLocation: formData.pickupLocation
+  //     };
+
+  //     const response = await axios.post('/api/auth/signup', signupData);
+
+  //     if (response.status === 201 && response.data.success) {
+  //       console.log('Signup successful!', response.data);
+  //       navigate('/login');
+  //     } else {
+  //       setApiError(response.data.message || 'Signup failed');
+  //     }
+  //     */
+
+  //     // remove when api is connected
+  //     await new Promise(resolve => setTimeout(resolve, 1500));
+  //     console.log('Signup successful!', formData);
+  //     navigate('/login');
+      
+  //   } catch (error) {
+  //     console.error('Signup error:', error);
+  //     setApiError('An unexpected error occurred');
+  //   } finally {
+  //     setIsLoading(false);
+  //   }
+  // };
 
   const handleSignIn = () => {
     navigate('/login');
@@ -222,29 +260,27 @@ const Signup: React.FC = () => {
         <Col lg={6} className="welcome-section d-flex flex-column justify-content-center align-items-center">
           <div className="welcome-content text-center">
             <div className="logo-section">
-              <img src={logo} alt="Shippix Logo" />
+              <img src={logo} alt="Shippix Logo" data-testid="logo" />
             </div>
-            <h1 className="welcome-title m-0">Create your Business Account</h1>
-            <p className="welcome-subtitle">Join Shippix-Business to manage your shipping</p>
+            <h1 className="welcome-title m-0" data-testid="welcome-title">Create your Business Account</h1>
+            <p className="welcome-subtitle" data-testid="welcome-subtitle">Join Shippix-Business to manage your shipping</p>
           </div>
         </Col>
 
         <Col lg={6} className="signup-form-section d-flex align-items-center p-4">
-
           <Container>
             <div className="signup-form rounded-4 shadow-sm px-3 py-3">
-                <Form onSubmit={handleSubmit}>
-
+              <Form onSubmit={handleSubmit} data-testid="signup-form">
                 <div className='section-header mb-4 pb-2'>
-                    <div className="d-flex align-items-center">
-                        <img src={personIcon} alt="Personal Icon"/>
-                        <h3 className='ms-2 mb-0'>Personal Information</h3>
-                    </div>
-                    <p className="section-subtitle">Your contact details</p>
+                  <div className="d-flex align-items-center">
+                    <img src={personIcon} alt="Personal Icon" data-testid="personal-icon"/>
+                    <h3 className='ms-2 mb-0' data-testid="personal-info-title">Personal Information</h3>
+                  </div>
+                  <p className="section-subtitle" data-testid="personal-info-subtitle">Your contact details</p>
                 </div>
 
                 <Form.Group className="mb-3">
-                    <Form.Control
+                  <Form.Control
                     type="text"
                     name="ownerName"
                     value={formData.ownerName}
@@ -253,18 +289,19 @@ const Signup: React.FC = () => {
                     className={`rounded-3 p-2 signup-input ${errors.ownerName ? 'is-invalid' : ''}`}
                     disabled={isLoading}
                     required
-                    />
-                    {errors.ownerName && (
-                    <div className="invalid-feedback d-block">
-                        {errors.ownerName}
+                    data-testid="owner-name-input"
+                  />
+                  {errors.ownerName && (
+                    <div className="invalid-feedback d-block" data-testid="owner-name-error">
+                      {errors.ownerName}
                     </div>
-                    )}
+                  )}
                 </Form.Group>
 
                 <Row>
-                    <Col md={6}>
+                  <Col md={6}>
                     <Form.Group className="mb-3">
-                        <Form.Control
+                      <Form.Control
                         type="email"
                         name="email"
                         value={formData.email}
@@ -273,17 +310,18 @@ const Signup: React.FC = () => {
                         className={`rounded-3 p-2 signup-input ${errors.email ? 'is-invalid' : ''}`}
                         disabled={isLoading}
                         required
-                        />
-                        {errors.email && (
-                        <div className="invalid-feedback d-block">
-                            {errors.email}
+                        data-testid="email-input"
+                      />
+                      {errors.email && (
+                        <div className="invalid-feedback d-block" data-testid="email-error">
+                          {errors.email}
                         </div>
-                        )}
+                      )}
                     </Form.Group>
-                    </Col>
-                    <Col md={6}>
+                  </Col>
+                  <Col md={6}>
                     <Form.Group className="mb-3">
-                        <Form.Control
+                      <Form.Control
                         type="tel"
                         name="phoneNumber"
                         value={formData.phoneNumber}
@@ -292,18 +330,19 @@ const Signup: React.FC = () => {
                         className={`rounded-3 p-2 signup-input ${errors.phoneNumber ? 'is-invalid' : ''}`}
                         disabled={isLoading}
                         required
-                        />
-                        {errors.phoneNumber && (
-                        <div className="invalid-feedback d-block">
-                            {errors.phoneNumber}
+                        data-testid="phone-number-input"
+                      />
+                      {errors.phoneNumber && (
+                        <div className="invalid-feedback d-block" data-testid="phone-number-error">
+                          {errors.phoneNumber}
                         </div>
-                        )}
+                      )}
                     </Form.Group>
-                    </Col>
+                  </Col>
                 </Row>
 
                 <Form.Group className="mb-3">
-                    <Form.Control
+                  <Form.Control
                     type="text"
                     name="nationalId"
                     value={formData.nationalId}
@@ -312,79 +351,80 @@ const Signup: React.FC = () => {
                     className={`rounded-3 p-2 signup-input ${errors.nationalId ? 'is-invalid' : ''}`}
                     disabled={isLoading}
                     required
-                    />
-                    {errors.nationalId && (
-                    <div className="invalid-feedback d-block">
-                        {errors.nationalId}
+                    data-testid="national-id-input"
+                  />
+                  {errors.nationalId && (
+                    <div className="invalid-feedback d-block" data-testid="national-id-error">
+                      {errors.nationalId}
                     </div>
-                    )}
+                  )}
                 </Form.Group>
 
                 <Row>
-                    <Col md={6}>
+                  <Col md={6}>
                     <Form.Group className="mb-3">
-                        <div className="password-input-container">
+                      <div className="password-input-container">
                         <Form.Control
-                            type={showPassword ? 'text' : 'password'}
-                            name="password"
-                            value={formData.password}
-                            onChange={handleInputChange}
-                            placeholder="Password"
-                            className={`rounded-3 p-2 signup-input password-field ${errors.password ? 'is-invalid' : ''}`}
-                            disabled={isLoading}
-                            required
+                          type={showPassword ? 'text' : 'password'}
+                          name="password"
+                          value={formData.password}
+                          onChange={handleInputChange}
+                          placeholder="Password"
+                          className={`rounded-3 p-2 signup-input password-field ${errors.password ? 'is-invalid' : ''}`}
+                          disabled={isLoading}
+                          required
+                          data-testid="password-input"
                         />
-                        <button type="button" className="password-toggle" onClick={() => setShowPassword(!showPassword)} disabled={isLoading}>
-                            <img src={showPasswordIcon} alt={showPassword ? "Hide Password" : "Show Password"} />
+                        <button type="button" className="password-toggle" onClick={() => setShowPassword(!showPassword)} disabled={isLoading} data-testid="password-toggle">
+                          <img src={showPasswordIcon} alt={showPassword ? "Hide Password" : "Show Password"} />
                         </button>
+                      </div>
+                      {errors.password && (
+                        <div className="invalid-feedback d-block" data-testid="password-error">
+                          {errors.password}
                         </div>
-                        {errors.password && (
-                        <div className="invalid-feedback d-block">
-                            {errors.password}
-                        </div>
-                        )}
+                      )}
                     </Form.Group>
-                    </Col>
-                    <Col md={6}>
+                  </Col>
+                  <Col md={6}>
                     <Form.Group className="mb-3">
-                        <div className="password-input-container">
+                      <div className="password-input-container">
                         <Form.Control
-                            type={showConfirmPassword ? 'text' : 'password'}
-                            name="confirmPassword"
-                            value={formData.confirmPassword}
-                            onChange={handleInputChange}
-                            placeholder="Confirm Password"
-                            className={`rounded-3 p-2 signup-input password-field ${errors.confirmPassword ? 'is-invalid' : ''}`}
-                            disabled={isLoading}
-                            required
+                          type={showConfirmPassword ? 'text' : 'password'}
+                          name="confirmPassword"
+                          value={formData.confirmPassword}
+                          onChange={handleInputChange}
+                          placeholder="Confirm Password"
+                          className={`rounded-3 p-2 signup-input password-field ${errors.confirmPassword ? 'is-invalid' : ''}`}
+                          disabled={isLoading}
+                          required
+                          data-testid="confirm-password-input"
                         />
-                        <button type="button" className="password-toggle" onClick={() => setShowConfirmPassword(!showConfirmPassword)} disabled={isLoading}>
-                            <img src={showPasswordIcon} alt={showConfirmPassword ? "Hide Password" : "Show Password"} />
+                        <button type="button" className="password-toggle" onClick={() => setShowConfirmPassword(!showConfirmPassword)} disabled={isLoading} data-testid="confirm-password-toggle">
+                          <img src={showPasswordIcon} alt={showConfirmPassword ? "Hide Password" : "Show Password"} />
                         </button>
+                      </div>
+                      {errors.confirmPassword && (
+                        <div className="invalid-feedback d-block" data-testid="confirm-password-error">
+                          {errors.confirmPassword}
                         </div>
-                        {errors.confirmPassword && (
-                        <div className="invalid-feedback d-block">
-                            {errors.confirmPassword}
-                        </div>
-                        )}
+                      )}
                     </Form.Group>
-                    </Col>
+                  </Col>
                 </Row>
 
-
-
                 <div className='section-header mb-4 pb-2'>
-                    <div className="d-flex align-items-center">
-                        <img src={homeIcon} alt="Business Icon"/>
-                        <h3 className='ms-2 mb-0'>Business Information</h3>
-                    </div>
-                    <p className="section-subtitle">Tell us about your business</p>
+                  <div className="d-flex align-items-center">
+                    <img src={homeIcon} alt="Business Icon" data-testid="business-icon"/>
+                    <h3 className='ms-2 mb-0' data-testid="business-info-title">Business Information</h3>
+                  </div>
+                  <p className="section-subtitle" data-testid="business-info-subtitle">Tell us about your business</p>
                 </div>
 
                 <Row>
-                    <Col md={6}>
+                  <Col md={6}>
                     <Form.Group className="mb-3">
-                        <Form.Control
+                      <Form.Control
                         type="text"
                         name="businessName"
                         value={formData.businessName}
@@ -393,38 +433,40 @@ const Signup: React.FC = () => {
                         className={`rounded-3 p-2 signup-input ${errors.businessName ? 'is-invalid' : ''}`}
                         disabled={isLoading}
                         required
-                        />
-                        {errors.businessName && (
-                        <div className="invalid-feedback d-block">
-                            {errors.businessName}
+                        data-testid="business-name-input"
+                      />
+                      {errors.businessName && (
+                        <div className="invalid-feedback d-block" data-testid="business-name-error">
+                          {errors.businessName}
                         </div>
-                        )}
+                      )}
                     </Form.Group>
-                    </Col>
-                    <Col md={6}>
+                  </Col>
+                  <Col md={6}>
                     <Form.Group className="mb-3">
-                        <Form.Select
+                      <Form.Select
                         name="businessType"
                         value={formData.businessType}
                         onChange={handleInputChange}
                         className={`rounded-3 p-2 signup-input ${errors.businessType ? 'is-invalid' : ''}`}
                         disabled={isLoading}
                         required
-                        >
+                        data-testid="business-type-select"
+                      >
                         <option value="">Business Type</option>
                         <option value="retail">Retail</option>
-                        </Form.Select>
-                        {errors.businessType && (
-                        <div className="invalid-feedback d-block">
-                            {errors.businessType}
+                      </Form.Select>
+                      {errors.businessType && (
+                        <div className="invalid-feedback d-block" data-testid="business-type-error">
+                          {errors.businessType}
                         </div>
-                        )}
+                      )}
                     </Form.Group>
-                    </Col>
+                  </Col>
                 </Row>
 
                 <Form.Group className="mb-4">
-                    <Form.Control
+                  <Form.Control
                     type="text"
                     name="pickupLocation"
                     value={formData.pickupLocation}
@@ -433,34 +475,33 @@ const Signup: React.FC = () => {
                     className={`rounded-3 p-2 signup-input ${errors.pickupLocation ? 'is-invalid' : ''}`}
                     disabled={isLoading}
                     required
-                    />
-                    {errors.pickupLocation && (
-                    <div className="invalid-feedback d-block">
-                        {errors.pickupLocation}
+                    data-testid="pickup-location-input"
+                  />
+                  {errors.pickupLocation && (
+                    <div className="invalid-feedback d-block" data-testid="pickup-location-error">
+                      {errors.pickupLocation}
                     </div>
-                    )}
+                  )}
                 </Form.Group>
 
-
-                <Button type="submit" className="signup-btn w-100 mb-3 py-2" disabled={isLoading || !isFormComplete()}>
-                    {isLoading ? (
+                <Button type="submit" className="signup-btn w-100 mb-3 py-2" disabled={isLoading || !isFormComplete()} data-testid="submit-button">
+                  {isLoading ? (
                     <>
-                        <Spinner as="span" animation="border" size="sm" role="status" aria-hidden="true" className="me-2"/>
-                        Creating Account...
+                      <Spinner as="span" animation="border" size="sm" role="status" aria-hidden="true" className="me-2"/>
+                      Creating Account...
                     </>
-                    ) : (
+                  ) : (
                     'Create Business Account'
-                    )}
+                  )}
                 </Button>
 
-
                 <div className="signin-section text-center">
-                    <span className="signin-text">Already have an account? </span>
-                    <button type="button" className="signin-link fw-bold" onClick={handleSignIn} disabled={isLoading}>
-                        Sign In
-                    </button>
+                  <span className="signin-text">Already have an account? </span>
+                  <button type="button" className="signin-link fw-bold" onClick={handleSignIn} disabled={isLoading} data-testid="sign-in-link">
+                    Sign In
+                  </button>
                 </div>
-                </Form>
+              </Form>
             </div>
           </Container>
         </Col>

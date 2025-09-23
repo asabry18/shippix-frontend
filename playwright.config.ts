@@ -77,15 +77,4 @@ export default defineConfig({
     reuseExistingServer: !process.env.CI,
   },
 
-  // plugins: [react()],
-  // server: {
-  //   proxy: {
-  //     '/api': {
-  //       target: 'http://localhost:8080', // Your Java backend
-  //       changeOrigin: true,
-  //       rewrite: (path) => path.replace(/^\/api/, ''),
-  //     },
-  //   },
-  // },
-
 });

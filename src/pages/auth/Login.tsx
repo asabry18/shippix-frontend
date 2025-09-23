@@ -3,7 +3,7 @@ import { Container, Row, Col, Form, Button, /*Alert*/ Spinner } from 'react-boot
 import { useNavigate } from 'react-router-dom';
 import logo from '../../assets/authIcons/logo.svg';
 import showPasswordIcon from '../../assets/authIcons/showpassword.svg';
-// import axios from 'axios'; 
+ import axios from 'axios'; 
 import './Login.css';
 
 interface LoginFormData {
@@ -84,24 +84,24 @@ const Login: React.FC = () => {
 
     try {
 
-      /*
-      const loginData = {
-        username: formData.username,
-        password: formData.password
-      };
 
-      const response = await axios.post('api', loginData);
+      // const loginData = {
+      //   username: formData.username,
+      //   password: formData.password
+      // };
 
-      if (response.status === 200 && response.data.success) {
-        const storage = formData.rememberMe ? localStorage : sessionStorage;
-        storage.setItem('authToken', response.data.token);
-        storage.setItem('user', JSON.stringify(response.data.user));
+      // const response = await axios.post('/api/auth/login', loginData);
+
+      // if (response.status === 200 && response.data.success) {
+      //   const storage = formData.rememberMe ? localStorage : sessionStorage;
+      //   storage.setItem('authToken', response.data.token);
+      //   storage.setItem('user', JSON.stringify(response.data.user));
         
-        console.log('Login successful!', response.data);
-      } else {
-        setApiError(response.data.message || 'Login failed');
-      }
-      */
+      //   console.log('Login successful!', response.data);
+      // } else {
+      //   setApiError(response.data.message || 'Login failed');
+      // }
+      
 
       // remove when api is connected
       await new Promise(resolve => setTimeout(resolve, 1000));
