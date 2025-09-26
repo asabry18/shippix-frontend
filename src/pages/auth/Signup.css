@@ -1,0 +1,82 @@
+.signup-container {
+  padding: 0;
+  overflow: hidden;
+}
+.signup-form-section {
+  background-color: #F9FAFB;
+}
+.signup-form{
+    border: 1px solid #23403C;
+}
+.signup-input:focus {
+  border-color: #1C7364;
+  box-shadow: 0 0 0 0.2rem rgba(28, 115, 100, 0.25);
+  background-color: #ffffff;
+}
+.signup-input.is-invalid {
+  border-color: #dc3545;
+}
+.signup-input.is-invalid:focus {
+  border-color: #1C7364;
+  box-shadow: 0 0 0 0.2rem rgba(28, 115, 100, 0.25);
+  background-color: #ffffff;
+}
+.signup-input::placeholder {
+  color: #999;
+  font-weight: 400;
+}
+
+.section-header {
+  border-bottom: 2px solid #e9ecef;
+}
+.section-subtitle {
+  font-size: 0.9rem;
+  color: #6c757d;
+  margin: 0.25rem 0 0 0;
+}
+
+.welcome-subtitle {
+  font-size: 1.1rem;
+  color: #155a4e;
+}
+
+.signup-btn {
+  background-color: #1C7364;
+  border-color: #1C7364;
+  font-weight: 600;
+  transition: all 0.2s ease;
+  font-size: 1.1rem;
+}
+.signup-btn:hover:not(:disabled) {
+  background-color: #155a4e;
+  border-color: #155a4e;
+  transform: translateY(-1px);
+}
+.signup-btn:focus {
+  box-shadow: 0 0 0 0.2rem rgba(28, 115, 100, 0.25);
+}
+.signup-btn:disabled {
+  background-color: #6c757d;
+  border-color: #6c757d;
+  cursor: not-allowed;
+  transform: none;
+}
+.signup-btn .spinner-border {
+  width: 1rem;
+  height: 1rem;
+}
+
+.signin-section {
+  border-top: 1px solid #e9ecef;
+}
+.signin-text {
+  color: #6c757d;
+}
+.signin-link {
+  background: none;
+  border: none;
+  color: #1C7364;
+  text-decoration: underline;
+  padding: 0;
+  transition: color 0.2s ease;
+}

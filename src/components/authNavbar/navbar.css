@@ -1,0 +1,99 @@
+.main-navbar {
+  background-color: #ffffff;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  z-index: 1030;
+}
+
+.navbar-brand-custom{
+    cursor: pointer;
+}
+
+.navbar-logo {
+    height: 50px;
+}
+
+.navbar-signin-btn {
+  background-color: #1C7364;
+  color: white;
+  font-weight: 600;
+  padding: 0.5rem 1.5rem;
+  transition: all 0.2s ease;
+}
+
+.navbar-signin-btn:hover {
+  background-color: #155a4e;
+  border-color: #155a4e;
+  transform: translateY(-1px);
+}
+
+.navbar-signin-btn:focus {
+  box-shadow: 0 0 0 0.2rem rgba(28, 115, 100, 0.25);
+  background-color: #0d453c !important;
+}
+
+.navbar-signin-btn.active-page {
+  background-color: #1C7364 !important;
+  color: white !important;
+}
+
+.navbar-signin-btn.active-page:hover {
+  background-color: #155a4e !important;
+  color: white !important;
+}
+
+.navbar-signin-btn:not(.active-page) {
+  background-color: #D0FFF7 !important;
+  color: #232447 !important;
+}
+
+.navbar-signin-btn:not(.active-page):hover {
+  background-color: #1C7364 !important;
+  color: white !important;
+}
+
+.navbar-signup-btn {
+  background-color: #D0FFF7;
+  color: #232447;
+  font-weight: 600;
+  padding: 0.5rem 1.5rem;
+  transition: all 0.2s ease;
+}
+
+.navbar-signup-btn:hover {
+  background-color: #1C7364;
+  border-color: #1C7364;
+  color: white;
+  transform: translateY(-1px);
+}
+
+.navbar-signup-btn:focus {
+  box-shadow: 0 0 0 0.2rem rgba(28, 115, 100, 0.25);
+  background-color: #0d453c !important;
+  color: white !important;
+}
+
+.navbar-signup-btn.active-page {
+  background-color: #1C7364 !important;
+  color: white !important;
+}
+
+.navbar-signup-btn.active-page:hover {
+  background-color: #155a4e !important;
+  color: white !important;
+}
+
+.navbar-signup-btn:not(.active-page) {
+  background-color: #D0FFF7 !important;
+  color: #232447 !important;
+}
+
+.navbar-signup-btn:not(.active-page):hover {
+  background-color: #1C7364 !important;
+  color: white !important;
+}
+
+@media (max-width: 991px) {
+  .main-navbar {
+    display: none !important;
+  }
+}
