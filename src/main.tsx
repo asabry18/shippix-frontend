@@ -6,7 +6,7 @@ import LoginAdmin from './pages/loginAdmin/loginAdmin'
 import AdminLayout from './components/adminLayout/adminLayout'
 import Overview from './pages/overview/Overview.tsx'
 import BusinessOwner from './pages/businessOwners/businessOwner.tsx'
-// import OrderReview from './pages/orderReview/OrderReview'
+import OrderReview from './pages/orderReview/orderReview.tsx'
 import Analytics from './pages/analytics/analytics.tsx'
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
@@ -19,7 +19,7 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
         <Route path="/admin" element={<AdminLayout />}>
           <Route path="dashboard" element={<Overview />} />
           <Route path="business-owners" element={<BusinessOwner />} />
-          {/* <Route path="orders" element={<OrderReview />} /> */}
+          <Route path="orders" element={<OrderReview />} />
           <Route path="analytics" element={<Analytics />} />
           <Route index element={<Navigate to="dashboard" replace />} />
         </Route>
