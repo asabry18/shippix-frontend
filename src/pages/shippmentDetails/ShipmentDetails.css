@@ -1,0 +1,180 @@
+.shipment-details-container {
+  background-color: #F9FAFB;
+}
+
+.map-card {
+  border-radius: 30px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+.map-placeholder {
+  background-color: #D0FFF7;
+  color: #1C7364;
+  border: 1px solid #7BD1C7;
+  border-radius: 20px;
+  height: 684px;
+}
+.map-placeholder img{
+    width: 40px;
+    height: 40px;
+}
+
+.status-card, .info-card {
+  border-radius: 20px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.status-item {
+  padding: 8px 0;
+}
+
+.status-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+}
+
+.status-dot.complete {
+  background-color: #1C7364;
+}
+
+.status-dot.current {
+  background-color: #1C7364;
+  animation: pulse 2s infinite;
+}
+
+.status-dot.pending {
+  background-color: #6c757d;
+}
+
+@keyframes pulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(28, 115, 100, 0.4);
+  }
+  70% {
+    box-shadow: 0 0 0 10px rgba(28, 115, 100, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(28, 115, 100, 0);
+  }
+}
+.status-text {
+  font-weight: 500;
+  color: #333;
+}
+
+.eta-section {
+  border-bottom: 1px solid #e9ecef;
+  padding-bottom: 1rem;
+}
+
+.eta-display {
+  background-color: #f8f9fa;
+  padding: 12px 16px;
+  border-radius: 8px;
+  border-left: 4px solid #1C7364;
+}
+
+.eta-time {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #333;
+}
+
+.reschedule-btn {
+  border-color: #1C7364 !important;
+  color: #1C7364 !important;
+  font-weight: 600;
+  padding: 10px 20px;
+  border-radius: 8px;
+  transition: all 0.2s ease;
+}
+
+.reschedule-btn:hover:not(:disabled) {
+  background-color: #1C7364 !important;
+  color: white !important;
+}
+
+.reschedule-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.driver-section {
+  padding-top: 1rem;
+}
+.driver-icon {
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.support-btn {
+  border-color: #E8E8E8 !important;
+  color: #6c757d !important;
+  font-weight: 600;
+  padding: 6px 16px;
+  border-radius: 6px;
+  font-size: 0.9rem;
+}
+.support-btn:hover {
+  background-color: #6c757d !important;
+  color: white !important;
+}
+
+.driver-details {
+  margin-left: 32px;
+}
+
+.driver-name {
+  font-weight: 600;
+  color: #333;
+}
+
+.call-btn {
+  border-color: #E8E8E8 !important;
+  color: #1C7364 !important;
+  font-weight: 600;
+  padding: 4px 12px;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  transition: all 0.2s ease;
+}
+
+.call-btn:hover {
+  background-color: #6c757d !important;
+  color: white !important;
+}
+
+.call-btn svg {
+  transition: stroke 0.2s ease;
+}
+
+.driver-rating {
+  font-size: 0.9rem;
+}
+
+@media (max-width: 991px) {
+  .map-placeholder {
+    height: 300px;
+  }
+  
+  .shipment-details-container {
+    padding: 1rem;
+  }
+}
+
+@media (max-width: 576px) {
+  .map-placeholder {
+    height: 250px;
+  }
+  
+  .eta-display {
+    padding: 10px 12px;
+  }
+  
+  .eta-time {
+    font-size: 1rem;
+  }
+}
