@@ -2,6 +2,12 @@ import React from 'react'
 import ReactDOM from 'react-dom/client'
 import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom'
 import 'bootstrap/dist/css/bootstrap.min.css';
+import LoginAdmin from './pages/loginAdmin/loginAdmin'
+import AdminLayout from './components/adminLayout/adminLayout'
+import Overview from './pages/overview/Overview.tsx'
+import BusinessOwner from './pages/businessOwners/businessOwner.tsx'
+import OrderReview from './pages/orderReview/orderReview.tsx'
+import Analytics from './pages/analytics/analytics.tsx'
 
 import Login from './pages/auth/Login';
 import Signup from './pages/auth/Signup';
@@ -63,7 +69,7 @@ const AppContent: React.FC = () => {
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
 
-        <Route path="/" element={<TrackYourOrder />} />
+        <Route path="/tracking" element={<TrackYourOrder />} />
         <Route path="/help" element={<Help />} />
         <Route path="/shipment/:id" element={<ShipmentDetails />} />
         <Route path="/shipment/:id/reschedule" element={<RescheduleShipment />} />
@@ -76,6 +82,20 @@ const AppContent: React.FC = () => {
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
+    <Router>
+      <Routes>
+        <Route path="/" element={<LoginAdmin />} />
+        <Route path="/admin-login" element={<LoginAdmin />} />
+
+        <Route path="/admin" element={<AdminLayout />}>
+          <Route path="dashboard" element={<Overview />} />
+          <Route path="business-owners" element={<BusinessOwner />} />
+          <Route path="orders" element={<OrderReview />} />
+          <Route path="analytics" element={<Analytics />} />
+        </Route>
+        
+      </Routes>
+    </Router>
     <Router>
       <AppContent />
     </Router>
