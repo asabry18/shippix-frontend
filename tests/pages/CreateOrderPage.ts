@@ -1,5 +1,5 @@
-// tests/pages/CreateOrderPage.ts
-import { Page, Locator } from '@playwright/test';
+
+import { Page, Locator, expect } from '@playwright/test';
 
 export class CreateOrderPage {
   readonly page: Page;
@@ -86,5 +86,30 @@ export class CreateOrderPage {
     await this.itemsDescriptionInput.fill('Electronics and Books');
     await this.packageValueInput.fill('1000');
     await this.totalWeightInput.fill('5.5');
+  }
+
+  async navigate() {
+    await this.page.goto('/create-order', { waitUntil: 'networkidle', timeout: 15000 });
+    await expect(this.page.locator('.create-order-page')).toBeVisible({ timeout: 10000 });
+  }
+
+  async fillValidFormData2(orderData: any) {
+    await this.customerNameInput.fill(orderData.customerName);
+    await this.emailInput.fill(orderData.emailAddress);
+    await this.phoneInput.fill(orderData.phoneNumber);
+    await this.streetAddressInput.fill(orderData.streetAddress);
+    await this.citySelect.selectOption(orderData.city);
+    await this.notesInput.fill(orderData.notesToDriver);
+    await this.itemsDescriptionInput.fill(orderData.itemsDescription);
+    await this.packageValueInput.fill(orderData.packageValue);
+    await this.totalWeightInput.fill(orderData.totalWeight);
+  }
+
+  async calculateAndNavigateToReview() {
+    await this.calculateButton.click();
+    await this.page.waitForTimeout(2000); // Wait for calculation
+    await expect(this.shippingCostCard).toBeVisible();
+    await this.nextButton.click();
+    await expect(this.page).toHaveURL(/review-order/, { timeout: 10000 });
   }
 }
