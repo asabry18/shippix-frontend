@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
-import { Container, Card, Form, Button, Spinner } from 'react-bootstrap';
+import { Container, Card, Form, Button, Spinner, Alert } from 'react-bootstrap';
+import { useNavigate } from 'react-router-dom';
 import logo from '../../assets/loginIcons/logo.svg';
 import showPasswordIcon from '../../assets/loginIcons/showPassword.svg';
-// import axios from 'axios'; 
+import axios from 'axios';
 import './loginAdmin.css';
 
 interface AdminLoginData {
@@ -17,6 +18,7 @@ interface ValidationErrors {
 }
 
 const LoginAdmin: React.FC = () => {
+  const navigate = useNavigate();
   const [formData, setFormData] = useState<AdminLoginData>({ email: '', password: '' });
   const [showPassword, setShowPassword] = useState(false);
   const [errors, setErrors] = useState<ValidationErrors>({});
@@ -74,34 +76,55 @@ const LoginAdmin: React.FC = () => {
     setIsLoading(true);
 
     try {
-
-      /*
       const loginData = {
         email: formData.email,
         password: formData.password
       };
 
-      const response = await axios.post('', loginData);
+      const response = await axios.post('/api/auth/login', loginData);
 
-      if (response.status === 200 && response.data.success) {
-        localStorage.setItem('adminToken', response.data.token);
-        localStorage.setItem('admin', JSON.stringify(response.data.admin));
+      if (response.status === 200 && response.data) {
+        const { accessToken, refreshToken, admin } = response.data;
         
-        console.log('Admin login successful!', response.data);
+        if (accessToken) {
+          localStorage.setItem('adminAccessToken', accessToken);
+        }
+        
+        if (refreshToken) {
+          localStorage.setItem('adminRefreshToken', refreshToken);
+        }
+        
+        if (admin) {
+          localStorage.setItem('admin', JSON.stringify(admin));
+        }
+        
+        console.log('Admin login successful!', {
+          accessToken: !!accessToken,
+          refreshToken: !!refreshToken,
+          admin: admin
+        });
+        
         navigate('/admin/dashboard');
       } else {
         setApiError(response.data.message || 'Login failed');
       }
-      */
-
-      // remove when api is connected
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      console.log('Admin login successful!', {email: formData.email});
       
-      
-    } catch (error) {
+    } catch (error: unknown) {
       console.error('Admin login error:', error);
-      setApiError('An unexpected error occurred');
+      
+      if (axios.isAxiosError(error)) {
+        if (error.response?.status === 401) {
+          setApiError('Invalid email or password');
+        } else if (error.response?.status === 400) {
+          setApiError(error.response?.data?.message || 'Invalid login credentials');
+        } else if (error.response?.data?.message) {
+          setApiError(error.response.data.message);
+        } else {
+          setApiError('Login failed. Please try again.');
+        }
+      } else {
+        setApiError('Network error. Please check your connection.');
+      }
     } finally {
       setIsLoading(false);
     }
@@ -123,12 +146,11 @@ const LoginAdmin: React.FC = () => {
             </div>
 
             <Form onSubmit={handleSubmit}>
-              {/* when api is connected */}
-              {/* {apiError && (
+              {apiError && (
                 <Alert variant="danger" className="mb-3">
                   {apiError}
                 </Alert>
-              )} */}
+              )}
 
               <Form.Group className="mb-3">
                 <Form.Label className="admin-form-label mb-1">Email Address</Form.Label>
