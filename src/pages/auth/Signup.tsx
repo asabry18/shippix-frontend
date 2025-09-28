@@ -1,15 +1,15 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Container, Row, Col, Form, Button, Spinner } from 'react-bootstrap';
 import { useNavigate } from 'react-router-dom';
 import logo from '../../assets/authIcons/logo.svg';
 import showPasswordIcon from '../../assets/authIcons/showpassword.svg';
 import personIcon from '../../assets/authIcons/person.svg';
 import homeIcon from '../../assets/authIcons/home.svg';
-// import axios from 'axios';
+import axios from 'axios';
 import './Signup.css';
 
 interface SignupFormData {
-  ownerName: string;
+  name: string;
   email: string;
   phoneNumber: string;
   nationalId: string;
@@ -18,10 +18,12 @@ interface SignupFormData {
   businessName: string;
   businessType: string;
   pickupLocation: string;
+  latitude?: number;
+  longitude?: number;
 }
 
 interface ValidationErrors {
-  ownerName?: string;
+  name?: string;
   email?: string;
   phoneNumber?: string;
   nationalId?: string;
@@ -36,7 +38,7 @@ interface ValidationErrors {
 const Signup: React.FC = () => {
   const navigate = useNavigate();
   const [formData, setFormData] = useState<SignupFormData>({
-    ownerName: '',
+    name: '',
     email: '',
     phoneNumber: '',
     nationalId: '',
@@ -52,17 +54,33 @@ const Signup: React.FC = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [apiError, setApiError] = useState<string>('');
 
+  type BusinessTypeDTO = {
+    value: string;
+    displayName: string;
+  };
+
+  const [businessTypes, setBusinessTypes] = useState<BusinessTypeDTO[]>([]);
+
+  useEffect(() => {
+    axios.get("/api/business-types")
+      .then(res => {
+        console.log("Business types fetched:", res.data);
+        setBusinessTypes(res.data);
+      })
+      .catch(err => console.error("Error fetching business types:", err));
+  }, []);
+
   const validateForm = (): boolean => {
     const newErrors: ValidationErrors = {};
 
-    if (!formData.ownerName.trim()) {
-      newErrors.ownerName = 'Owner name is required';
-    } else if (formData.ownerName.charAt(0) === ' ') {
-      newErrors.ownerName = 'First character cannot be a space';
-    } else if (/\d/.test(formData.ownerName)) {
-      newErrors.ownerName = 'Numbers are not allowed in owner name';
-    } else if (!/^[a-zA-Z\s]+$/.test(formData.ownerName)) {
-      newErrors.ownerName = 'Special characters are not allowed in owner name';
+    if (!formData.name.trim()) {
+      newErrors.name = 'Owner name is required';
+    } else if (formData.name.charAt(0) === ' ') {
+      newErrors.name = 'First character cannot be a space';
+    } else if (/\d/.test(formData.name)) {
+      newErrors.name = 'Numbers are not allowed in owner name';
+    } else if (!/^[a-zA-Z\s]+$/.test(formData.name)) {
+      newErrors.name = 'Special characters are not allowed in owner name';
     }
 
     if (!formData.email.trim()) {
@@ -133,7 +151,7 @@ const Signup: React.FC = () => {
 
   const isFormComplete = (): boolean => {
     return (
-      formData.ownerName.trim() !== '' &&
+      formData.name.trim() !== '' &&
       formData.email.trim() !== '' &&
       formData.phoneNumber.trim() !== '' &&
       formData.nationalId.trim() !== '' &&
@@ -165,10 +183,35 @@ const Signup: React.FC = () => {
     }));
   };
 
+  const geocodeAddress = async (address: string) => {
+    try {
+      const response = await axios.get('https://nominatim.openstreetmap.org/search', {
+        params: {
+          q: address,
+          format: 'json',
+          limit: 1
+        },
+        headers: {
+          'User-Agent': 'Shippix/1.0 (contact@shippix.com)' // Required by Nominatim
+        }
+      });
+      if (response.data && response.data.length > 0) {
+        return {
+          latitude: parseFloat(response.data[0].lat),
+          longitude: parseFloat(response.data[0].lon)
+        };
+      } else {
+        throw new Error('No results found');
+      }
+    } catch (error) {
+      throw new Error('Geocoding failed');
+    }
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
     setApiError('');
+    setErrors({});
 
     if (!validateForm()) {
       return;
@@ -177,36 +220,46 @@ const Signup: React.FC = () => {
     setIsLoading(true);
 
     try {
-      /*
+      const { latitude, longitude } = await geocodeAddress(formData.pickupLocation);
       const signupData = {
-        ownerName: formData.ownerName,
+        name: formData.name,
         email: formData.email,
         phoneNumber: formData.phoneNumber,
         nationalId: formData.nationalId,
         password: formData.password,
+        confirmPassword: formData.confirmPassword,
         businessName: formData.businessName,
         businessType: formData.businessType,
-        pickupLocation: formData.pickupLocation
+        latitude,
+        longitude
       };
 
-      const response = await axios.post('/api/auth/signup', signupData);
-
-      if (response.status === 201 && response.data.success) {
+      console.log("Submitting signup data:", signupData);
+      const response = await axios.post('/api/auth/register', signupData);
+      console.log("Signup response:", response.data);
+      console.log("response status:", response.status);
+      if (response.status === 200) {
         console.log('Signup successful!', response.data);
         navigate('/login');
       } else {
         setApiError(response.data.message || 'Signup failed');
       }
-      */
-
-      // remove when api is connected
-      await new Promise(resolve => setTimeout(resolve, 1500));
-      console.log('Signup successful!', formData);
-      navigate('/login');
-      
-    } catch (error) {
+    } catch (error: any) {
       console.error('Signup error:', error);
-      setApiError('An unexpected error occurred');
+      if (error.response?.data?.errors) {
+        const newErrors: ValidationErrors = {};
+        error.response.data.errors.forEach((err: any) => {
+          const field = err.field === 'name' ? 'name' : err.field;
+          newErrors[field as keyof ValidationErrors] = err.defaultMessage;
+        });
+        setErrors(newErrors);
+        setApiError('Please correct the errors in the form.');
+      } else if (error.message.includes('Geocoding failed')) {
+        setErrors({ pickupLocation: 'Invalid pickup location. Please enter a valid address.' });
+        setApiError('Please correct the errors in the form.');
+      } else {
+        setApiError(error.response?.data?.message || 'An unexpected error occurred');
+      }
     } finally {
       setIsLoading(false);
     }
@@ -230,41 +283,45 @@ const Signup: React.FC = () => {
         </Col>
 
         <Col lg={6} className="signup-form-section d-flex align-items-center p-4">
-
           <Container>
             <div className="signup-form rounded-4 shadow-sm px-3 py-3">
-                <Form onSubmit={handleSubmit}>
+              <Form onSubmit={handleSubmit}>
+                {apiError && (
+                  <div className="alert alert-danger" role="alert">
+                    {apiError}
+                  </div>
+                )}
 
                 <div className='section-header mb-4 pb-2'>
-                    <div className="d-flex align-items-center">
-                        <img src={personIcon} alt="Personal Icon"/>
-                        <h3 className='ms-2 mb-0'>Personal Information</h3>
-                    </div>
-                    <p className="section-subtitle">Your contact details</p>
+                  <div className="d-flex align-items-center">
+                    <img src={personIcon} alt="Personal Icon"/>
+                    <h3 className='ms-2 mb-0'>Personal Information</h3>
+                  </div>
+                  <p className="section-subtitle">Your contact details</p>
                 </div>
 
                 <Form.Group className="mb-3">
-                    <Form.Control
+                  <Form.Control
                     type="text"
-                    name="ownerName"
-                    value={formData.ownerName}
+                    name="name"
+                    value={formData.name}
                     onChange={handleInputChange}
                     placeholder="Owner Name"
-                    className={`rounded-3 p-2 signup-input ${errors.ownerName ? 'is-invalid' : ''}`}
+                    className={`rounded-3 p-2 signup-input ${errors.name ? 'is-invalid' : ''}`}
                     disabled={isLoading}
                     required
-                    />
-                    {errors.ownerName && (
+                  />
+                  {errors.name && (
                     <div className="invalid-feedback d-block">
-                        {errors.ownerName}
+                      {errors.name}
                     </div>
-                    )}
+                  )}
                 </Form.Group>
 
                 <Row>
-                    <Col md={6}>
+                  <Col md={6}>
                     <Form.Group className="mb-3">
-                        <Form.Control
+                      <Form.Control
                         type="email"
                         name="email"
                         value={formData.email}
@@ -273,17 +330,17 @@ const Signup: React.FC = () => {
                         className={`rounded-3 p-2 signup-input ${errors.email ? 'is-invalid' : ''}`}
                         disabled={isLoading}
                         required
-                        />
-                        {errors.email && (
+                      />
+                      {errors.email && (
                         <div className="invalid-feedback d-block">
-                            {errors.email}
+                          {errors.email}
                         </div>
-                        )}
+                      )}
                     </Form.Group>
-                    </Col>
-                    <Col md={6}>
+                  </Col>
+                  <Col md={6}>
                     <Form.Group className="mb-3">
-                        <Form.Control
+                      <Form.Control
                         type="tel"
                         name="phoneNumber"
                         value={formData.phoneNumber}
@@ -292,18 +349,18 @@ const Signup: React.FC = () => {
                         className={`rounded-3 p-2 signup-input ${errors.phoneNumber ? 'is-invalid' : ''}`}
                         disabled={isLoading}
                         required
-                        />
-                        {errors.phoneNumber && (
+                      />
+                      {errors.phoneNumber && (
                         <div className="invalid-feedback d-block">
-                            {errors.phoneNumber}
+                          {errors.phoneNumber}
                         </div>
-                        )}
+                      )}
                     </Form.Group>
-                    </Col>
+                  </Col>
                 </Row>
 
                 <Form.Group className="mb-3">
-                    <Form.Control
+                  <Form.Control
                     type="text"
                     name="nationalId"
                     value={formData.nationalId}
@@ -312,79 +369,77 @@ const Signup: React.FC = () => {
                     className={`rounded-3 p-2 signup-input ${errors.nationalId ? 'is-invalid' : ''}`}
                     disabled={isLoading}
                     required
-                    />
-                    {errors.nationalId && (
+                  />
+                  {errors.nationalId && (
                     <div className="invalid-feedback d-block">
-                        {errors.nationalId}
+                      {errors.nationalId}
                     </div>
-                    )}
+                  )}
                 </Form.Group>
 
                 <Row>
-                    <Col md={6}>
+                  <Col md={6}>
                     <Form.Group className="mb-3">
-                        <div className="password-input-container">
+                      <div className="password-input-container">
                         <Form.Control
-                            type={showPassword ? 'text' : 'password'}
-                            name="password"
-                            value={formData.password}
-                            onChange={handleInputChange}
-                            placeholder="Password"
-                            className={`rounded-3 p-2 signup-input password-field ${errors.password ? 'is-invalid' : ''}`}
-                            disabled={isLoading}
-                            required
+                          type={showPassword ? 'text' : 'password'}
+                          name="password"
+                          value={formData.password}
+                          onChange={handleInputChange}
+                          placeholder="Password"
+                          className={`rounded-3 p-2 signup-input password-field ${errors.password ? 'is-invalid' : ''}`}
+                          disabled={isLoading}
+                          required
                         />
                         <button type="button" className="password-toggle" onClick={() => setShowPassword(!showPassword)} disabled={isLoading}>
-                            <img src={showPasswordIcon} alt={showPassword ? "Hide Password" : "Show Password"} />
+                          <img src={showPasswordIcon} alt={showPassword ? "Hide Password" : "Show Password"} />
                         </button>
-                        </div>
-                        {errors.password && (
+                      </div>
+                      {errors.password && (
                         <div className="invalid-feedback d-block">
-                            {errors.password}
+                          {errors.password}
                         </div>
-                        )}
+                      )}
                     </Form.Group>
-                    </Col>
-                    <Col md={6}>
+                  </Col>
+                  <Col md={6}>
                     <Form.Group className="mb-3">
-                        <div className="password-input-container">
+                      <div className="password-input-container">
                         <Form.Control
-                            type={showConfirmPassword ? 'text' : 'password'}
-                            name="confirmPassword"
-                            value={formData.confirmPassword}
-                            onChange={handleInputChange}
-                            placeholder="Confirm Password"
-                            className={`rounded-3 p-2 signup-input password-field ${errors.confirmPassword ? 'is-invalid' : ''}`}
-                            disabled={isLoading}
-                            required
+                          type={showConfirmPassword ? 'text' : 'password'}
+                          name="confirmPassword"
+                          value={formData.confirmPassword}
+                          onChange={handleInputChange}
+                          placeholder="Confirm Password"
+                          className={`rounded-3 p-2 signup-input password-field ${errors.confirmPassword ? 'is-invalid' : ''}`}
+                          disabled={isLoading}
+                          required
                         />
                         <button type="button" className="password-toggle" onClick={() => setShowConfirmPassword(!showConfirmPassword)} disabled={isLoading}>
-                            <img src={showPasswordIcon} alt={showConfirmPassword ? "Hide Password" : "Show Password"} />
+                          <img src={showPasswordIcon} alt={showConfirmPassword ? "Hide Password" : "Show Password"} />
                         </button>
-                        </div>
-                        {errors.confirmPassword && (
+                      </div>
+                      {errors.confirmPassword && (
                         <div className="invalid-feedback d-block">
-                            {errors.confirmPassword}
+                          {errors.confirmPassword}
                         </div>
-                        )}
+                      )}
                     </Form.Group>
-                    </Col>
+                  </Col>
                 </Row>
 
-
-
                 <div className='section-header mb-4 pb-2'>
-                    <div className="d-flex align-items-center">
-                        <img src={homeIcon} alt="Business Icon"/>
-                        <h3 className='ms-2 mb-0'>Business Information</h3>
-                    </div>
-                    <p className="section-subtitle">Tell us about your business</p>
+                  <div className="d-flex align-items-center">
+                    <img src={homeIcon} alt="Business Icon"/>
+                    <h3 className='ms-2 mb-0'>Business Information</h3>
+                  </div>
+                  <p className="section-subtitle">Tell us about your business</p>
                 </div>
 
                 <Row>
-                    <Col md={6}>
+                  <Col md={6}>
                     <Form.Group className="mb-3">
-                        <Form.Control
+                      <Form.Control
                         type="text"
                         name="businessName"
                         value={formData.businessName}
@@ -393,38 +448,40 @@ const Signup: React.FC = () => {
                         className={`rounded-3 p-2 signup-input ${errors.businessName ? 'is-invalid' : ''}`}
                         disabled={isLoading}
                         required
-                        />
-                        {errors.businessName && (
+                      />
+                      {errors.businessName && (
                         <div className="invalid-feedback d-block">
-                            {errors.businessName}
+                          {errors.businessName}
                         </div>
-                        )}
+                      )}
                     </Form.Group>
-                    </Col>
-                    <Col md={6}>
+                  </Col>
+                  <Col md={6}>
                     <Form.Group className="mb-3">
-                        <Form.Select
+                      <Form.Select
                         name="businessType"
                         value={formData.businessType}
                         onChange={handleInputChange}
                         className={`rounded-3 p-2 signup-input ${errors.businessType ? 'is-invalid' : ''}`}
                         disabled={isLoading}
                         required
-                        >
-                        <option value="">Business Type</option>
-                        <option value="retail">Retail</option>
-                        </Form.Select>
-                        {errors.businessType && (
-                        <div className="invalid-feedback d-block">
-                            {errors.businessType}
-                        </div>
-                        )}
+                      >
+                        <option value="">Select a business type</option>
+                        {businessTypes.map(type => (
+                          <option key={type.value} value={type.value}>
+                            {type.displayName}
+                          </option>
+                        ))}
+                      </Form.Select>
+                      {errors.businessType && (
+                        <div className="invalid-feedback d-block">{errors.businessType}</div>
+                      )}
                     </Form.Group>
-                    </Col>
+                  </Col>
                 </Row>
 
                 <Form.Group className="mb-4">
-                    <Form.Control
+                  <Form.Control
                     type="text"
                     name="pickupLocation"
                     value={formData.pickupLocation}
@@ -433,34 +490,32 @@ const Signup: React.FC = () => {
                     className={`rounded-3 p-2 signup-input ${errors.pickupLocation ? 'is-invalid' : ''}`}
                     disabled={isLoading}
                     required
-                    />
-                    {errors.pickupLocation && (
+                  />
+                  {errors.pickupLocation && (
                     <div className="invalid-feedback d-block">
-                        {errors.pickupLocation}
+                      {errors.pickupLocation}
                     </div>
-                    )}
+                  )}
                 </Form.Group>
 
-
                 <Button type="submit" className="signup-btn w-100 mb-3 py-2" disabled={isLoading || !isFormComplete()}>
-                    {isLoading ? (
+                  {isLoading ? (
                     <>
-                        <Spinner as="span" animation="border" size="sm" role="status" aria-hidden="true" className="me-2"/>
-                        Creating Account...
+                      <Spinner as="span" animation="border" size="sm" role="status" aria-hidden="true" className="me-2"/>
+                      Creating Account...
                     </>
-                    ) : (
+                  ) : (
                     'Create Business Account'
-                    )}
+                  )}
                 </Button>
 
-
                 <div className="signin-section text-center">
-                    <span className="signin-text">Already have an account? </span>
-                    <button type="button" className="signin-link fw-bold" onClick={handleSignIn} disabled={isLoading}>
-                        Sign In
-                    </button>
+                  <span className="signin-text">Already have an account? </span>
+                  <button type="button" className="signin-link fw-bold" onClick={handleSignIn} disabled={isLoading}>
+                    Sign In
+                  </button>
                 </div>
-                </Form>
+              </Form>
             </div>
           </Container>
         </Col>
