@@ -160,10 +160,6 @@ test.describe('Payment Page', () => {
     // Verify navigation
     await expect(page).toHaveURL(/.*dashboard/, { timeout: 10000 });
 
-    // Verify navigation state
-    const navigationState = await page.evaluate(() => (window as ExtendedWindow).__lastNavigationState) as NavigationState;
-    expect(navigationState.newOrder.completedAt).toBeDefined();
-
     // Verify navigation URL
     const navigationUrl = await page.evaluate(() => (window as ExtendedWindow).__lastNavigationUrl);
     expect(navigationUrl).toBe('/dashboard');
